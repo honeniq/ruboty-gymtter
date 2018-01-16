@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["honeniq"]
   spec.email         = ["honeniq@gmail.com"]
 
-  spec.summary       = %q{summery}
-  spec.description   = %q{description}
+  spec.summary       = %q{Reply 'えらい' to user who went to gym.}
+  spec.description   = %q{Reply 'えらい' to user who went to gym.}
   spec.homepage      = "https://github.com/honeniq/ruboty-gymtter"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
