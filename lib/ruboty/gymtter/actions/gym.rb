@@ -10,8 +10,7 @@ module Ruboty
 
         private
         def gym
-          #message.from.to_s + 'えらい'
-          '@' + message.from_name + ' えらい'
+          'えらい @' + message.from_name
         end
       end
     end
