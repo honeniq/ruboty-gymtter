@@ -4,8 +4,8 @@ module Ruboty
   module Handlers
     # A Ruboty Handler for Gymtter
     class Gymtter < Base
-      on /gym/, name: 'gym', description: 'ジムと言われたらえらいと応える'
-      on /ジム/, name: 'gym', description: 'ジムと言われたらえらいと応える'
+      on /.*?gym/, name: 'gym', description: 'ジムと言われたらえらいと応える'
+      on /.*?ジム/, name: 'gym', description: 'ジムと言われたらえらいと応える'
 
 
       def gym(message)
