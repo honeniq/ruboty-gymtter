@@ -8,38 +8,39 @@ describe Ruboty::Handlers::Gymtter do
       Ruboty::Robot.new
     end
 
-    describe '#gym' do
-      let(:from) do
-        "alice"
-      end
+  shared_context 'alice to ruboty' do
+    let(:message) do 
+      {
+       body: 'えらい @alice',
+        from: '#general',
+        to: 'alice',
+         original: {
+           body: '@ruboty gym',
+           from: 'alice',
+           robot: robot,
+           to: '#general',
+         },
+      }
+    end
+  end
 
-      let(:to) do
-        "#general"
-      end
-
-      let(:said) do
-        "@ruboty gym"
-      end
-
-      let(:replied) do
-        "えらい @alice"
-      end
-
+  describe '#gym' do
+    describe 'keyword gym' do
+      include_context 'alice to ruboty'
       it 'gym' do
-        expect(robot).to receive(:say).with(
-          body: replied,
-          from: to,
-          to: from,
-          original: {
-            body: said,
-            from: from,
-            robot: robot,
-            to: to,
-          },
-        )
-        robot.receive(body: said, from: from, to: to)
+        expect(robot).to receive(:say).with(message)
+        robot.receive(body: "@ruboty gym", from: 'alice', to: '#general')
+      end
+    end
+
+    describe 'keyword ジム' do
+      include_context 'alice to ruboty'
+      it 'gym2' do
+        message[:original][:body] = '@ruboty ジム'
+        expect(robot).to receive(:say).with(message)
+        robot.receive(body: '@ruboty ジム', from: 'alice', to: '#general')
       end
     end
   end
 end
-
+end
