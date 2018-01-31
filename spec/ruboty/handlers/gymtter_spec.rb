@@ -57,7 +57,7 @@ describe Ruboty::Handlers::Gymtter do
       describe '10の倍数だったら「○回目 えらい」と返す' do
         include_context 'alice to ruboty'
 
-        it '10回目' do
+        it '10回目 えらい' do
           robot.brain.data['alice.counter'] = 9
           
           message[:original][:body] = '@ruboty gym'
@@ -66,7 +66,7 @@ describe Ruboty::Handlers::Gymtter do
           robot.receive(body: "@ruboty gym", from: 'alice', to: '#general')
         end
 
-        it '70回目' do
+        it '70回目 えらい' do
           robot.brain.data['alice.counter'] = 69
           
           message[:original][:body] = '@ruboty gym'
