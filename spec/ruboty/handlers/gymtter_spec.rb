@@ -76,5 +76,17 @@ describe Ruboty::Handlers::Gymtter do
         end
       end
     end
+
+    describe '#count' do
+      include_context 'alice to ruboty'
+        it 'count と言うと累計回数を教えてくれる' do
+          robot.brain.data['alice.counter'] = 13
+          
+          message[:original][:body] = '@ruboty count'
+          message[:body] = '13回ジムに行っています @alice'
+          expect(robot).to receive(:say).with(message)
+          robot.receive(body: "@ruboty count", from: 'alice', to: '#general')
+        end
+    end
   end
 end
