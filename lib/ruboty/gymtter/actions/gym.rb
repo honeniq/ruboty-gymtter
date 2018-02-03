@@ -13,11 +13,19 @@ module Ruboty
           name = message.from_name
           count = increment(name)
 
+          reply = 'えらい @' + name
+          
           if anniversary?(count)
-            count.to_s + '回目 えらい @' + name
-          else
-            'えらい @' + name
+            reply.insert(0, "#{count}回目")
           end
+
+          today = Date.today
+          if HolidayJp.holiday?(today)
+            holiday_name = HolidayJp.between(today, today).first.name
+            reply.insert(0, holiday_name + 'なのに')
+          end
+
+          reply
         end
 
         def increment(name)
