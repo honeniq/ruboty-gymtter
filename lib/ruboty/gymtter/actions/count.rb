@@ -14,7 +14,11 @@ module Ruboty
           key = message.from_name + '.counter'
 
           brain.data[key] ||= 0
-          brain.data[key].to_s + '回ジムに行っています @' + message.from_name
+          if brain.data[key] == 0
+            'まだジムに行ったことがありません @' + message.from_name
+          else
+            brain.data[key].to_s + '回ジムに行っています @' + message.from_name
+          end
         end
       end
     end
