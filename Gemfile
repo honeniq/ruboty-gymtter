@@ -6,3 +6,4 @@ gemspec
 gem 'rspec'
 gem 'ruboty'
 gem 'pry'
+gem 'holiday_jp'
