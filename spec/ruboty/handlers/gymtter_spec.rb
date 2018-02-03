@@ -8,85 +8,71 @@ describe Ruboty::Handlers::Gymtter do
       Ruboty::Robot.new
     end
 
-    shared_context 'alice to ruboty' do
+    shared_examples 'conversation' do 
+      | said='@ruboty gym', expected='えらい @alice', count=0 |
+
       let(:message) do 
         {
-         body: 'えらい @alice',
+         body: expected,
           from: '#general',
           to: 'alice',
            original: {
-             body: '@ruboty gym',
+             body: said,
              from: 'alice',
              robot: robot,
              to: '#general',
            },
         }
       end
-    end
-  
-    describe '#gym normal pattern' do
-      describe 'gym' do
-        include_context 'alice to ruboty'
-        it 'gymと言われたらえらいと返す' do
-          message[:original][:body] = '@ruboty gym'
-          expect(robot).to receive(:say).with(message)
-          robot.receive(body: "@ruboty gym", from: 'alice', to: '#general')
-        end
-      end
-  
-      describe 'ジム' do
-        include_context 'alice to ruboty'
-        it 'ジムと言われたらえらいと返す' do
-          message[:original][:body] = '@ruboty ジム'
-          expect(robot).to receive(:say).with(message)
-          robot.receive(body: '@ruboty ジム', from: 'alice', to: '#general')
-        end
-      end
-  
-      describe '昨日ジム行ってきた' do
-        include_context 'alice to ruboty'
-        it '前後に他の言葉が入ってても、ジムと言われたらえらいと返す' do
-          message[:original][:body] = '@ruboty 昨日ジム行ってきた'
-          expect(robot).to receive(:say).with(message)
-          robot.receive(body: '@ruboty 昨日ジム行ってきた', from: 'alice', to: '#general')
-        end
+      it "'#{said}'と言われたら、'#{expected}'と応える" do 
+        robot.brain.data['alice.counter'] = count
+        expect(robot).to receive(:say).with(message)
+        robot.receive(body: said, from: 'alice', to: '#general')
       end
     end
-  
-    describe '#gym anniversary pattern' do
-      describe '10の倍数だったら「○回目 えらい」と返す' do
-        include_context 'alice to ruboty'
+    
+    describe '#gym' do
+      describe '通常パターン(gym)' do
+        include_examples 'conversation' , said='@ruboty gym', expected='えらい @alice'
+      end
 
-        it '10回目 えらい' do
-          robot.brain.data['alice.counter'] = 9
-          
-          message[:original][:body] = '@ruboty gym'
-          message[:body] = '10回目 えらい @alice'
-          expect(robot).to receive(:say).with(message)
-          robot.receive(body: "@ruboty gym", from: 'alice', to: '#general')
+      describe '通常パターン(ジム)' do
+        include_examples 'conversation' , said='@ruboty ジム', expected='えらい @alice'
+      end
+
+      describe '前後に他の言葉が入っていても反応する' do
+        include_examples 'conversation' , said='@ruboty 昨日ジム行ってきた',
+          expected='えらい @alice'
+      end
+
+      describe '記念パターン' do
+        describe '10の倍数のときは記念パターン' do
+          include_examples 'conversation' , said='@ruboty gym',
+            expected="10回目 えらい @alice", count=9
         end
 
-        it '70回目 えらい' do
-          robot.brain.data['alice.counter'] = 69
-          
-          message[:original][:body] = '@ruboty gym'
-          message[:body] = '70回目 えらい @alice'
-          expect(robot).to receive(:say).with(message)
-          robot.receive(body: "@ruboty gym", from: 'alice', to: '#general')
+        describe '10の倍数のときは記念パターン' do
+          include_examples 'conversation' , said='@ruboty gym',
+            expected="70回目 えらい @alice", count=69
+        end
+
+        describe '普通の数字のときはいつも通りの返事' do
+          include_examples 'conversation' , said='@ruboty gym',
+            expected="えらい @alice", count=10
         end
       end
     end
 
     describe '#count' do
-      include_context 'alice to ruboty'
-        it 'count と言うと累計回数を教えてくれる' do
-          robot.brain.data['alice.counter'] = 13
-          
-          message[:original][:body] = '@ruboty count'
-          message[:body] = '13回ジムに行っています @alice'
-          expect(robot).to receive(:say).with(message)
-          robot.receive(body: "@ruboty count", from: 'alice', to: '#general')
-        end
+      describe '累計回数を教えてくれる(13回行ってる状態)' do
+        include_examples 'conversation' , said='@ruboty count',
+          expected='13回ジムに行っています @alice', count=13
+      end
+
+      describe '行ったことがないときは回数を返さない' do
+        include_examples 'conversation' , said='@ruboty count',
+          expected='まだジムに行ったことがありません @alice', count=0
+      end
     end
   end
 end
