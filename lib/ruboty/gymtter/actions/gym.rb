@@ -21,19 +21,15 @@ module Ruboty
         end
 
         def increment(name)
-          brain = message.robot.brain
+          data = message.robot.brain.data
           key = name + '.counter'
 
-          brain.data[key] ||= 0
-          brain.data[key] = brain.data[key] + 1
+          data[key] ||= 0
+          data[key] = data[key] + 1
         end
 
         def anniversary?(counter)
-          if counter % 10 == 0
-            true
-          else
-            false
-          end
+          counter % 10 == 0 ? true : false
         end
       end
     end
